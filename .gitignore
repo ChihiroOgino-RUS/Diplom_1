@@ -3,3 +3,7 @@
 
 # Working directory
 .workbench/
+
+# Maven
+target/
+*.class
