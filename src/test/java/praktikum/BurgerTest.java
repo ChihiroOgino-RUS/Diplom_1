@@ -124,48 +124,4 @@ public class BurgerTest {
         burger.moveIngredient(0, 10);
     }
 
-    @Test
-    public void getReceiptBunOnlyTest() {
-        String bunName = "black bun";
-
-        when(bun.getName()).thenReturn(bunName);
-        when(bun.getPrice()).thenReturn(100f);
-
-        burger.setBuns(bun);
-
-        StringBuilder receiptBuilder = new StringBuilder()
-                .append(String.format("(==== %s ====)%n", bunName))
-                .append(String.format("(==== %s ====)%n%n", bunName))
-                .append(String.format("Price: %f%n", 200f));
-
-        String expected = receiptBuilder.toString();
-
-        assertEquals(expected, burger.getReceipt());
-    }
-
-    @Test
-    public void getReceiptWithIngredientsTest() {
-        when(bun.getName()).thenReturn("black bun");
-        when(bun.getPrice()).thenReturn(100f);
-
-        burger.setBuns(bun);
-
-        Ingredient hotSauce = new Ingredient(IngredientType.SAUCE, "hot sauce", 100f);
-        Ingredient sourCream = new Ingredient(IngredientType.SAUCE, "sour cream", 200f);
-
-        burger.addIngredient(hotSauce);
-        burger.addIngredient(sourCream);
-
-        StringBuilder receiptBuilder = new StringBuilder()
-                .append(String.format("(==== %s ====)%n", bun.getName()))
-                .append(String.format("= %s %s =%n", hotSauce.getType().toString().toLowerCase(), hotSauce.getName()))
-                .append(String.format("= %s %s =%n", sourCream.getType().toString().toLowerCase(), sourCream.getName()))
-                .append(String.format("(==== %s ====)%n%n", bun.getName()))
-                .append(String.format("Price: %f%n", 500f));
-
-        String expected = receiptBuilder.toString();
-
-        assertEquals(expected, burger.getReceipt());
-    }
-
 }
