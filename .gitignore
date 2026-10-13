@@ -4,6 +4,8 @@
 # Working directory
 .workbench/
 
-# Maven
-target/
+# Maven — артефакты сборки не трекаем, кроме отчёта JaCoCo
+target/*
+!target/site/
+!target/site/jacoco/
 *.class
