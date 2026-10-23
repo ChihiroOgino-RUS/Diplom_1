@@ -16,6 +16,12 @@ public class BurgerTest {
     @Mock
     Bun bun;
 
+    @Mock
+    Ingredient firstIngredient;
+
+    @Mock
+    Ingredient secondIngredient;
+
     Burger burger;
 
     @Before
@@ -35,36 +41,30 @@ public class BurgerTest {
     }
 
     @Test
-    public void addIngredientTest() {
-        IngredientType expectedType = IngredientType.FILLING;
-        String expectedName = "cutlet";
-        float expectedPrice = 100f;
+    public void addIngredientAddsIngredientTest() {
+        burger.addIngredient(firstIngredient);
 
-        Ingredient newIngredient = new Ingredient(expectedType, expectedName, expectedPrice);
-        burger.addIngredient(newIngredient);
-        Ingredient actualIngredient = burger.ingredients.get(0);
-
-        assertEquals(expectedType, actualIngredient.getType());
-        assertEquals(expectedName, actualIngredient.getName());
-        assertEquals(expectedPrice, actualIngredient.getPrice(), 0.001f);
+        assertEquals(firstIngredient, burger.ingredients.get(0));
     }
 
     @Test
-    public void removeIngredientTest() {
-        Ingredient hotSauce = new Ingredient(IngredientType.SAUCE, "hot sauce", 100f);
-        Ingredient sourCream = new Ingredient(IngredientType.SAUCE, "sour cream", 200f);
+    public void removeIngredientRemovesIngredientTest() {
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
-        burger.addIngredient(hotSauce);
-        burger.addIngredient(sourCream);
         burger.removeIngredient(0);
 
-        Ingredient actualIngredient = burger.ingredients.get(0);
+        assertEquals(1, burger.ingredients.size());
+    }
 
-        int expectedSize = 1;
-        String expectedName = "sour cream";
+    @Test
+    public void removeIngredientKeepsRemainingIngredientTest() {
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
-        assertEquals(expectedSize, burger.ingredients.size());
-        assertEquals(expectedName, actualIngredient.getName());
+        burger.removeIngredient(0);
+
+        assertEquals(secondIngredient, burger.ingredients.get(0));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -73,55 +73,40 @@ public class BurgerTest {
     }
 
     @Test
-    public void moveIngredientTest() {
-        Ingredient hotSauce = new Ingredient(IngredientType.SAUCE, "hot sauce", 100f);
-        Ingredient sourCream = new Ingredient(IngredientType.SAUCE, "sour cream", 200f);
-
-        burger.addIngredient(hotSauce);
-        burger.addIngredient(sourCream);
-
-        assertTrue("Некорректный порядок", burger.ingredients.indexOf(sourCream) > burger.ingredients.indexOf(hotSauce));
+    public void moveIngredientForwardTest() {
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
         burger.moveIngredient(0, 1);
 
-        assertTrue("Прямое перемещение: ингредиент не перемещён", burger.ingredients.indexOf(sourCream) < burger.ingredients.indexOf(hotSauce));
+        assertTrue("Прямое перемещение: ингредиент не перемещён",
+                burger.ingredients.indexOf(secondIngredient) < burger.ingredients.indexOf(firstIngredient));
     }
 
     @Test
     public void moveIngredientBackTest() {
-        Ingredient hotSauce = new Ingredient(IngredientType.SAUCE, "hot sauce", 100f);
-        Ingredient sourCream = new Ingredient(IngredientType.SAUCE, "sour cream", 200f);
-
-        burger.addIngredient(hotSauce);
-        burger.addIngredient(sourCream);
-
-        assertTrue("Некорректный порядок", burger.ingredients.indexOf(sourCream) > burger.ingredients.indexOf(hotSauce));
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
         burger.moveIngredient(1, 0);
 
-        assertTrue("Обратное перемещение: ингредиент не перемещён", burger.ingredients.indexOf(sourCream) < burger.ingredients.indexOf(hotSauce));
+        assertTrue("Обратное перемещение: ингредиент не перемещён",
+                burger.ingredients.indexOf(secondIngredient) < burger.ingredients.indexOf(firstIngredient));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void moveIngredientInvalidIndexTest() {
-        Ingredient hotSauce = new Ingredient(IngredientType.SAUCE, "hot sauce", 100f);
-        Ingredient sourCream = new Ingredient(IngredientType.SAUCE, "sour cream", 200f);
-
-        burger.addIngredient(hotSauce);
-        burger.addIngredient(sourCream);
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
         burger.moveIngredient(10, 1);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void moveIngredientInvalidNewIndexTest() {
-        Ingredient hotSauce = new Ingredient(IngredientType.SAUCE, "hot sauce", 100f);
-        Ingredient sourCream = new Ingredient(IngredientType.SAUCE, "sour cream", 200f);
-
-        burger.addIngredient(hotSauce);
-        burger.addIngredient(sourCream);
+        burger.addIngredient(firstIngredient);
+        burger.addIngredient(secondIngredient);
 
         burger.moveIngredient(0, 10);
     }
-
 }
